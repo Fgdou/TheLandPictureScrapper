@@ -2,7 +2,10 @@ import { connect } from 'puppeteer-real-browser';
 import * as fs from 'fs'
 import { exit } from 'process';
 
+const baseUrl = "https://the-land.ymag.cloud"
+
 console.log();
+console.log(`Starting picture scrapper on ${baseUrl}`);
 
 if(process.argv.length != 6) {
     console.error(`Usage: ${process.argv[0]} ${process.argv[1]} username password from-number to-number`)
@@ -41,7 +44,7 @@ const { page, browser } = await connect({
 
 
 // Navigate the page to a URL.
-await page.goto('https://the-land.ymag.cloud');
+await page.goto(baseUrl);
 
 
 // Set screen size.
@@ -68,7 +71,7 @@ await page.waitForNetworkIdle()
 for(let i=from; i<to; i++){
     console.log(i);
 
-    let url = `https://the-land.ymag.cloud/index.php/apprenant/photo/150/${i}`
+    let url = `${baseUrl}/index.php/apprenant/photo/150/${i}`
     let filename = `./pictures/${i}.jpeg`
 
     let page = await browser.newPage();
