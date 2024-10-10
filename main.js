@@ -1,11 +1,27 @@
 import { connect } from 'puppeteer-real-browser';
 import * as fs from 'fs'
+import { exit } from 'process';
 
-const username = ''
-const password = ''
+console.log();
 
-if(username === '') throw new Error("Please fill the username")
-if(password === '') throw new Error("Please fill the password")
+if(process.argv.length != 6) {
+    console.error(`Usage: ${process.argv[0]} ${process.argv[1]} username password from-number to-number`)
+    exit(1)
+}
+
+const username = process.argv[2]
+const password = process.argv[3]
+
+const [from, to] = [parseInt(process.argv[4]), parseInt(process.argv[5])];
+
+if(isNaN(from) || isNaN(to) || from < 10000 || from > 100000 || to < 10000 || to > 100000) {
+    console.error("from and to should be between 10000 and 100000")
+    exit(1)
+}
+
+console.log(`Username: ${username}`)
+console.log(`Going from ${from} to ${to} (${to-from} entries)`)
+console.log(`Saving into ./pictures...`)
 
 const { page, browser } = await connect({
     headless: false,
@@ -49,7 +65,7 @@ await page.waitForNavigation()
 
 await page.waitForNetworkIdle()
 
-for(let i=49000; i<49100; i++){
+for(let i=from; i<to; i++){
     console.log(i);
 
     let url = `https://the-land.ymag.cloud/index.php/apprenant/photo/150/${i}`
